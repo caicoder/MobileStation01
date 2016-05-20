@@ -1,0 +1,31 @@
+//
+//  PrefixHeader.pch
+//  MobileStation
+//
+//  Created by DS365 on 16/5/16.
+//  Copyright © 2016年 MobileStation. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+
+#define PrefixHeader_pch
+
+
+#define HMRGBColor(r, g, b) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:1.0]
+#define HMARGBColor(r, g, b, a) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:(a)]
+
+#define isLandscape ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationLandscapeLeft \
+|| [[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationLandscapeRight)
+
+#define isIOS8_or_Later ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
+
+#define kScreen_Bounds (isIOS8_or_Later ? [UIScreen mainScreen].bounds : (isLandscape ? CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width) : [UIScreen mainScreen].bounds))
+#define kScreen_Height (isIOS8_or_Later ? [UIScreen mainScreen].bounds.size.height : (isLandscape ? [UIScreen mainScreen].bounds.size.width : [UIScreen mainScreen].bounds.size.height))
+#define kScreen_Width (isIOS8_or_Later ? [UIScreen mainScreen].bounds.size.width : (isLandscape ? [UIScreen mainScreen].bounds.size.height : [UIScreen mainScreen].bounds.size.width))
+
+
+#define HMRandomColor HMRGBColor(arc4random_uniform(255), arc4random_uniform(255), arc4random_uniform(255))
+#import "HMConst.h"
+#import "UIView+Extension.h"
+#define HMNoteCenter [NSNotificationCenter defaultCenter]
+#endif /* PrefixHeader_pch */
