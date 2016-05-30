@@ -25,7 +25,59 @@
 
 
 #define HMRandomColor HMRGBColor(arc4random_uniform(255), arc4random_uniform(255), arc4random_uniform(255))
-#import "HMConst.h"
 #import "UIView+Extension.h"
+#import "MBProgressHUD.h"
+#import "MBProgressHUD+Show.h"
+#import "MBNetWorkTool.h"
 #define HMNoteCenter [NSNotificationCenter defaultCenter]
+
+//颜色
+#define kGlobalBg [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1]
+
+#define RGB(r, g, b)                        [UIColor colorWithRed:(r)/255.f green:(g)/255.f blue:(b)/255.f alpha:1.f]
+
+#define RGBA(r, g, b, a)                    [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:a]
+
+
+/*----------------- NOTIFACTION DEFINE ----------------------*/
+
+//  登录成功
+#define __USER_LOGIN_SUCCESS          @"__userLoginSucess"
+
+//  退出登录成功
+#define __USER_LOGINOUT_SUCCESS       @"__userLoginOutSuccess"
+#define  USERKEY          @"userkey"
+
+#define SHOWINPUTVIEW        @"SHOWINPUTVIEW"
+
+#define SEARCHVCRELOAD      @"SEARCHVCRELOAD"
+
+#define SHOWBTNREMOVEFATHERVIEW @"SHOWBTNREMOVEFATHERVIEW"
+#define GETNETWORKLIST     @"GETNETWORKLIST"
+
+//danli
+#define singleton_interface(className) \
++ (className *)shared##className;
+
+
+// @implementation
+#define singleton_implementation(className) \
+static className *_instance; \
++ (id)allocWithZone:(NSZone *)zone \
+{ \
+static dispatch_once_t onceToken; \
+dispatch_once(&onceToken, ^{ \
+_instance = [super allocWithZone:zone]; \
+}); \
+return _instance; \
+} \
++ (className *)shared##className \
+{ \
+static dispatch_once_t onceToken; \
+dispatch_once(&onceToken, ^{ \
+_instance = [[self alloc] init]; \
+}); \
+return _instance; \
+}
+
 #endif /* PrefixHeader_pch */

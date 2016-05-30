@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "COStyleFactory.h"
 
 @interface AppDelegate ()
 
@@ -16,14 +17,37 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    
+    [COStyleFactory applyStyle];
     [self setUpBaiMap];
+    [self setNOTE];
+    NSUserDefaults * stand=[NSUserDefaults standardUserDefaults];
+    NSString * usekey=[stand objectForKey:USERKEY];
+    if (usekey) {
+        [self userLoginSuccess];
+    }else
+    {
+        [self userLoginOutSuccess];
+    }
+    return YES;
+}
+
+-(void)setNOTE
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userLoginSuccess) name:__USER_LOGIN_SUCCESS object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userLoginOutSuccess) name:__USER_LOGINOUT_SUCCESS object:nil];
+}
+-(void)userLoginSuccess
+{
     UIStoryboard *login = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    self.window.rootViewController = [login instantiateViewControllerWithIdentifier:@"CONAVController"];
+    [self.window makeKeyAndVisible];
+}
+-(void)userLoginOutSuccess
+{
+    UIStoryboard *login = [UIStoryboard storyboardWithName:@"Login" bundle:nil];
     self.window.rootViewController = [login instantiateInitialViewController];
     [self.window makeKeyAndVisible];
-    
-    // Override point for customization after application launch.
-    return YES;
 }
 -(void)setUpBaiMap{
     //百度地图
@@ -37,7 +61,7 @@
     }
     _mapManager = [[BMKMapManager alloc]init];
     // 如果要关注网络及授权验证事件，请设定     generalDelegate参数
-    BOOL ret = [_mapManager start:@"k5bVPCcqFoxIOvUGNbKLtHcM"  generalDelegate:nil];
+    BOOL ret = [_mapManager start:@"rzuLybbdLq8NMcA9sUHlF3Oex9y5aUMO"  generalDelegate:nil];
     if (!ret) {
         NSLog(@"manager start failed!");
     }

@@ -19,7 +19,7 @@
 
 #define kCOLoginViewHeight CGRectGetHeight(self.view.frame)
 #define kCOLoginPopHeight CGRectGetHeight(self.loginView.frame)
-#define kCOLoginShowOffset ((kCOLoginViewHeight - kCOLoginPopHeight)/2)
+#define kCOLoginShowOffset     100//((kCOLoginViewHeight - kCOLoginPopHeight)/2)
 
 @interface COLoginViewController ()<UIGestureRecognizerDelegate>
 
@@ -151,20 +151,13 @@
 - (BOOL)checkField
 {
     if (_nameField.text.length == 0) {
-//        [self showErrorWithStatus:@"用户名不能为空"];
+        [MBProgressHUD showWithText:@"用户名不能为空"];
         return NO;
     }
     
     if (_passwdField.text.length == 0) {
-//        [self showErrorWithStatus:@"密码不能为空"];
+        [MBProgressHUD showWithText:@"密码不能为空"];
         return NO;
-    }
-    
-    if (_needCaptcha) {
-        if (_captchaField.text.length == 0) {
-//            [self showErrorWithStatus:@"验证码不能为空"];
-            return NO;
-        }
     }
     
     return YES;
@@ -179,10 +172,30 @@
 - (IBAction)loginAction:(id)sender
 {
     if ([self checkField]) {
-        
+        NSMutableDictionary * dic=[[NSMutableDictionary alloc]init];
+        [dic setValue:self.nameField.text forKey:@"account"];
+        [dic setValue:self.passwdField.text forKey:@"password"];
+        [dic setObject:@"login" forKey:@"type"];
+        [[MBNetWorkTool sharedNetworkTools]makeGetRequestwithParameters:dic success:^(NSDictionary *results) {
+            NSUserDefaults * stand=[NSUserDefaults standardUserDefaults];
+            [MBProgressHUD showWithText:[results valueForKey:@"reason"]];
+            NSString * userKey =[results valueForKey:@"userkey"];
+            [stand setObject:userKey forKey:USERKEY];
+            [[NSNotificationCenter defaultCenter] postNotificationName:__USER_LOGIN_SUCCESS object:nil];
+            
+        } fail:^(NSDictionary *results) {
+             [MBProgressHUD showWithText:[results valueForKey:@"reason"]];
+        } error:^(NSError *results) {
+            
+        }];
     }
 }
 
+
+-(void)dealloc
+{
+    [HMNoteCenter removeObserver:self];
+}
 
 - (void)hideRegCaptcha
 {
@@ -197,10 +210,36 @@
 }
 - (IBAction)registerAction:(id)sender
 {
-
+    if ([self checkRegisterField]) {
+        NSMutableDictionary * dic=[[NSMutableDictionary alloc]init];
+        [dic setValue:self.mailField.text forKey:@"account"];
+        [dic setValue:self.globalKeyField.text forKey:@"password"];
+        [dic setObject:@"register" forKey:@"type"];
+        [[MBNetWorkTool sharedNetworkTools]makeGetRequestwithParameters:dic success:^(NSDictionary *results) {
+            
+        } fail:^(NSDictionary *results) {
+            [MBProgressHUD showWithText:[results valueForKey:@"reason"]];
+        } error:^(NSError *results) {
+            
+        }];
+    }
     
 }
 
+- (BOOL)checkRegisterField
+{
+    if (self.mailField.text.length == 0) {
+        [MBProgressHUD showWithText:@"手机号不能为空"];
+        return NO;
+    }
+    
+    if (self.globalKeyField.text.length == 0) {
+        [MBProgressHUD showWithText:@"密码不能为空"];
+        return NO;
+    }
+    
+    return YES;
+}
 - (IBAction)showServiceAction:(id)sender
 {
     [self.view endEditing:YES];

@@ -12,59 +12,108 @@
 #import "CORegServiceViewController.h"
 #import "UIImage+Color.h"
 #import "ResultVC.h"
+#import "InputCell.h"
+#import "DataManmager.h"
+#import "UIView+Extension.h"
+#import "CORootViewController.h"
+
+
+#import "ShowVC.h"
+
 
 
 @interface SearchVC ()<UITableViewDelegate,UITableViewDataSource>
-@property (nonatomic,strong)UITableView * taV;
 @property (nonatomic,strong)UIButton  * yidongBtn;
 @property (nonatomic,strong)UIButton  * liantBtn;
 @property (nonatomic,strong)UIButton  * dianXbtn;
-@property (nonatomic,assign)int type;
+@property (nonatomic,assign) int  type;
+@property (nonatomic,strong)NSMutableArray * yidongList;
+@property (nonatomic,strong)NSMutableArray * liantongList;
+@property (nonatomic,strong)NSMutableArray * dianxinList;
+@property (nonatomic,strong)UIButton * showBtn;
+@property (nonatomic,strong)UIButton * addBtn;
+@property (nonatomic,strong)InputCell * inputCell;
+
 @end
 
 @implementation SearchVC
 -(UITableView *)taV
 {
     if (_taV==nil) {
-        _taV=[[UITableView alloc]initWithFrame:CGRectMake(0, 90, 320, self.view.height-50) style:UITableViewStylePlain];
-        _taV.delegate=self;
-        _taV.dataSource=self;
-        [_taV registerNib:[UINib nibWithNibName:@"EditTableViewCell" bundle:nil] forCellReuseIdentifier:@"EditTableViewCell"];
-        [_taV registerNib:[UINib nibWithNibName:@"ResultTableViewCell" bundle:nil] forCellReuseIdentifier:@"ResultTableViewCell"];
-        [_taV setBackgroundColor:[UIColor lightGrayColor]];
+     
     }
     return _taV;
 }
-
+-(void)setupTabV
+{
+    self.taV.delegate=self;
+    self.taV.dataSource=self;
+    [self.taV registerNib:[UINib nibWithNibName:@"EditTableViewCell" bundle:nil] forCellReuseIdentifier:@"EditTableViewCell"];
+    [self.taV registerNib:[UINib nibWithNibName:@"InputCell" bundle:nil] forCellReuseIdentifier:@"InputCell"];
+    [self.taV setBackgroundColor:kGlobalBg];
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.title=@"查询基站";
     [self setUpUI];
-//    self.title=@"查询";
-    [self setUpChildVC];
-    // Do any additional setup after loading the view.
+    [self setupTabV];
+    [self  addnote];
+    [self CreatList];
+    self.type=0;
+}
+-(void)CreatList
+{
+    _liantongList=[DataManmager sharedDataManmager].liantongList;
+    _dianxinList=[DataManmager sharedDataManmager].dianxinList;
+    _yidongList=[DataManmager sharedDataManmager].yidongList;
+    [self.taV reloadData];
+}
+-(void)addnote
+{
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showinputView) name:SHOWINPUTVIEW object:nil];
+    [HMNoteCenter addObserver:self selector:@selector(reloadTableView:) name:SEARCHVCRELOAD object:nil];
+//    [HMNoteCenter addObserver:self selector:@selector(shwBtnRemove) name:SHOWBTNREMOVEFATHERVIEW object:nil];
+}
+-(void)reloadTableView:(NSNotification *)note
+{
+    dataModel * model= note.userInfo[@"commodityModel"];
+    switch (self.type) {
+        case 0:
+        {
+            [_yidongList insertObject:model atIndex:0];
+            [self.taV reloadData];
+        }
+            break;
+        case 1:
+        {
+            [_liantongList insertObject:model atIndex:0];
+            [self.taV reloadData];
+        }
+            break;
+        default :
+        {
+            [_dianxinList insertObject:model atIndex:0];
+            [self.taV reloadData];
+        }
+            break;
+    }
 }
 -(void)setUpUI
 {
-    [self.view addSubview:self.taV];
+  
     [self SetUPBTN];
-    UIButton * searchBtn=[[UIButton alloc]initWithFrame:CGRectMake(0, self.view.height-88, 320, 88)];
-    [searchBtn setBackgroundColor:[UIColor blueColor]];
-    [searchBtn setTitle:@"搜索" forState:UIControlStateNormal];
-    [searchBtn addTarget:self action:@selector(searchBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:searchBtn];
+    [self.searchBtn setBackgroundImage:[UIImage imageNamed:@"bar_topbar"] forState:UIControlStateNormal];
+    self.searchBtn.titleLabel.font=[UIFont systemFontOfSize:20];
+
+
+    
 }
--(void)setUpChildVC
-{
-    CORegServiceViewController *controller = [[UIStoryboard storyboardWithName:@"Login" bundle:nil] instantiateViewControllerWithIdentifier:@"CORegServiceViewController"];
-    controller.view.frame = CGRectMake(320, 0, self.view.width-320, self.view.height);
-    [self.view addSubview:controller.view];
-    [self addChildViewController:controller];
-}
+
 -(void)SetUPBTN
 {
-    CGFloat btnW=320/3;
+    CGFloat btnW=self.topView.width/3;
     CGFloat btnH=90;
-    UIButton * yidongBtn=[[UIButton alloc]initWithFrame:CGRectMake(0, 0, btnW, btnH)];
+    UIButton * yidongBtn=[[UIButton alloc]initWithFrame:CGRectMake(2, 0, btnW, btnH)];
 //    [yidongBtn setTitle:@"移动基站" forState:UIControlStateNormal];
     yidongBtn.titleLabel.font=[UIFont boldSystemFontOfSize:18];
     [yidongBtn setImage:[UIImage imageNamed:@"chinaMobile"] forState:UIControlStateNormal];
@@ -73,7 +122,6 @@
     yidongBtn.tag=1;
     [yidongBtn addTarget:self action:@selector(BarSelectBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     yidongBtn.selected=YES;
-    self.type=0;
     self.yidongBtn=yidongBtn;
     
     UIButton * lianTBtn=[[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(yidongBtn.frame), 0, btnW, btnH)];
@@ -93,9 +141,9 @@
      [dianXBtn addTarget:self action:@selector(BarSelectBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     self.dianXbtn=dianXBtn;
     
-    [self.view addSubview:yidongBtn];
-    [self.view addSubview:lianTBtn];
-    [self.view addSubview:dianXBtn];
+    [self.topView addSubview:yidongBtn];
+    [self.topView addSubview:lianTBtn];
+    [self.topView addSubview:dianXBtn];
     
     
 }
@@ -108,6 +156,7 @@
             self.liantBtn.selected=NO ;
             self.dianXbtn.selected=NO;
             self.type=0;
+            [self.taV reloadData];
         }
             break;
         case 2:
@@ -116,6 +165,7 @@
             self.liantBtn.selected=YES ;
             self.dianXbtn.selected=NO;
             self.type=1;
+            [self.taV reloadData];
         }
             break;
         case 3:
@@ -124,6 +174,7 @@
             self.liantBtn.selected=NO ;
             self.dianXbtn.selected=YES;
             self.type=3;
+            [self.taV reloadData];
         }
             break;
             
@@ -131,39 +182,89 @@
             break;
     }
 }
+-(void)showinputView:(UIButton *)btn
+{
+   
 
--(void)searchBtnClick:(UIButton *)searchBtn
-{
-//    UIButton * showBtn=[[UIButton alloc]initWithFrame:CGRectMake(0, 0,kScreen_Width, kScreen_Height)];
-//    [showBtn addTarget:self action:@selector(showBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-////    [showBtn setBackgroundColor:[UIColor orangeColor]];
-//    EditTableViewCell * cell=[self.taV dequeueReusableCellWithIdentifier:@"EditTableViewCell"];
-//    cell.bounds=CGRectMake(0, 0, 320, 110);
-//    [showBtn addSubview:cell];
-//    cell.center=showBtn.center;
-//    [[UIApplication sharedApplication].keyWindow addSubview:showBtn];
+    switch (btn.tag) {
+        case 0:
+        {
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+            ShowVC *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"ShowTwoVC"];
+            [vc.view setBackgroundColor:[UIColor whiteColor]];
+            [[CORootViewController currentRoot] popoverController:vc withSize:CGSizeMake(320, 110)];
+            [vc setClickSureBtn:^(dataModel * modeDic) {
+                [_yidongList addObject:modeDic];
+                [self.taV reloadData];
+            }];
+   
+        }
+            break;
+        case 1:
+        {
+//            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+            ShowVC *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"ShowTwoVC"];
+            [vc.view setBackgroundColor:[UIColor whiteColor]];
+            [[CORootViewController currentRoot] popoverController:vc withSize:CGSizeMake(320, 110)];
+            [vc setClickSureBtn:^(dataModel * modeDic) {
+                [_liantongList addObject:modeDic];
+                [self.taV reloadData];
+            }];
+        }
+            break;
+
+        case 3:
+        {
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+            ShowVC *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"ShowVC"];
+            [vc.view setBackgroundColor:[UIColor whiteColor]];
+            [[CORootViewController currentRoot] popoverController:vc withSize:CGSizeMake(320, 150)];
+            [vc setClickSureBtn:^(dataModel * modeDic) {
+                [_dianxinList addObject:modeDic];
+                [self.taV reloadData];
+            }];
+        }
+            break;
+
+            
+        default:
+            break;
+    }
+
     
-    
-//    CGSize viewSize = self.view.bounds.size;
-//    CGSize serviceSize = CGSizeMake(viewSize.width * 0.5, viewSize.height * 0.7);
-    
-    ResultVC * controller=[[ResultVC alloc]init];
-    [[UIStoryboard storyboardWithName:@"Login" bundle:nil] instantiateViewControllerWithIdentifier:@"ResultVC"];
-    controller.view.frame = CGRectMake(0, 0, 320, kScreen_Height);
-//    controller.view.layer.cornerRadius = 4.0;
-//    controller.view.layer.masksToBounds = YES;
-    
-    [self.view addSubview:controller.view];
-    [self addChildViewController:controller];
-    
-    [UIView animateWithDuration:0.3 animations:^{
-        controller.view.center = CGPointMake(160, kScreen_Height*0.5);
-    }];
 }
--(void)showBtnClick:(UIButton *)showBtn
+- (IBAction)searchBtnClick:(UIButton *)sender
 {
-    [showBtn removeFromSuperview];
+
+    ResultVC * controller=[self.storyboard instantiateViewControllerWithIdentifier:@"ResultVC"];
+    switch (self.type) {
+        case 0:
+        {
+            controller.resultList=_yidongList;
+        }
+            break;
+        case 1:
+        {
+            controller.resultList=_liantongList;
+        }
+            break;
+        case 3:
+        {
+            controller.resultList=_dianxinList;
+        }
+            break;
+            
+        default:
+            break;
+    }
+    if (controller.resultList.count<=0) {
+        [MBProgressHUD showWithText:@"没有需要查询的基站"];
+        return;
+    }
+    
+    [self.navigationController pushViewController:controller animated:YES];
 }
+
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -171,17 +272,155 @@
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 20;
+    switch (self.type) {
+        case 0:
+            return _yidongList.count;
+//            return 20;
+            break;
+            
+        case 1:
+            return _liantongList.count;
+            break;
+        case 3:
+            return _dianxinList.count;
+            break;
+            
+        default:
+            return 0;
+            break;
+    }
 }
+
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    EditTableViewCell * cell=[tableView dequeueReusableCellWithIdentifier:@"EditTableViewCell"];
-    return  cell;
+    switch (self.type) {
+        case 0:
+        {
+            EditTableViewCell * cell=[tableView dequeueReusableCellWithIdentifier:@"EditTableViewCell"];
+            cell.type=self.type;
+            dataModel * model=_yidongList[indexPath.row];
+            cell.model=model;
+            return  cell;
+        }
+            break;
+            
+        case 1:
+        {
+            
+            EditTableViewCell * cell=[tableView dequeueReusableCellWithIdentifier:@"EditTableViewCell"];
+            cell.type=self.type;
+            dataModel * model=_liantongList[indexPath.row];
+            cell.model=model;
+            return  cell;
+        }
+            break;
+        case 3:
+        {
+            EditTableViewCell * cell=[tableView dequeueReusableCellWithIdentifier:@"EditTableViewCell"];
+            cell.type=self.type;
+            dataModel * model=_dianxinList[indexPath.row];
+            cell.model=model;
+            return  cell;
+        }
+            break;
+            
+        default:
+        {
+            EditTableViewCell * cell=[tableView dequeueReusableCellWithIdentifier:@"EditTableViewCell"];
+            cell.type=self.type;
+            return  cell;
+        }
+            break;
+    }
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 110;
+    switch (self.type) {
+        case 0:
+            return 110;
+            break;
+        case 1:
+            return 110;
+            break;
+        case 3:
+            return 150;
+            break;
+        default:
+            return 110;
+            break;
+    }
 }
 
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+//    ShowVC *popoverVC = [storyboard instantiateViewControllerWithIdentifier:@"ShowVC"];
+//    [popoverVC.view setBackgroundColor:[UIColor whiteColor]];
+//    [[CORootViewController currentRoot] popoverController:popoverVC withSize:CGSizeMake(320, 150)];
+    
+}
+-(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    switch (self.type) {
+        case 0:
+        {
+            UIButton * footerBtn=[[UIButton alloc]initWithFrame:CGRectMake(0, 0, self.topView.width, 50)];
+            [footerBtn setTitle:@"新增一条记录" forState:UIControlStateNormal];
+            [footerBtn setTintColor:[UIColor whiteColor]];
+            [footerBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            UIView * footerView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.width, 50)];
+            [footerView addSubview:footerBtn];
+            footerBtn.tag=self.type;
+            [footerBtn setBackgroundImage:[UIImage imageNamed:@"bar_topbar"] forState:UIControlStateNormal];
+            [footerBtn addTarget:self action:@selector(showinputView:) forControlEvents:UIControlEventTouchUpInside];
+            return footerView;
+        }
+            break;
+        case 1:
+        {
+            UIButton * footerBtn=[[UIButton alloc]initWithFrame:CGRectMake(0, 0, self.topView.width, 50)];
+            [footerBtn setTitle:@"新增一条记录" forState:UIControlStateNormal];
+            [footerBtn setTintColor:[UIColor whiteColor]];
+            [footerBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            UIView * footerView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.width, 50)];
+            [footerView addSubview:footerBtn];
+            footerBtn.tag=self.type;
+            [footerBtn setBackgroundImage:[UIImage imageNamed:@"bar_topbar"] forState:UIControlStateNormal];
+            [footerBtn addTarget:self action:@selector(showinputView:) forControlEvents:UIControlEventTouchUpInside];
+            return footerView;
+        }
+            break;
+        default :
+        {
+            UIButton * footerBtn=[[UIButton alloc]initWithFrame:CGRectMake(0, 0, self.topView.width, 50)];
+            [footerBtn setTitle:@"新增一条记录" forState:UIControlStateNormal];
+            [footerBtn setTintColor:[UIColor whiteColor]];
+            [footerBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            UIView * footerView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.width, 50)];
+            [footerView addSubview:footerBtn];
+            footerBtn.tag=self.type;
+            [footerBtn setBackgroundImage:[UIImage imageNamed:@"bar_topbar"] forState:UIControlStateNormal];
+            [footerBtn addTarget:self action:@selector(showinputView:) forControlEvents:UIControlEventTouchUpInside];
+            return footerView;
+        }
+            break;
+    }
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 50;
+}
+//section头部间距
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 5;//section头部高度
+}
+//section头部视图
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *view=[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 1)];
+    view.backgroundColor = [UIColor clearColor];
+    return view;
+}
 
 @end

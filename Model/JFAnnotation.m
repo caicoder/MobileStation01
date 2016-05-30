@@ -7,12 +7,12 @@
 //
 
 #import "JFAnnotation.h"
-#import "JFDataModel.h"
+#import "resultModel.h"
 
 
 @implementation JFAnnotation
 
--(void)setDataModel:(JFDataModel *)dataModel{
+-(void)setDataModel:(resultModel *)dataModel{
     _jfModel = dataModel;
   
 }

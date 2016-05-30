@@ -14,6 +14,9 @@
 #import "MJExtension.h"
 #import "GetUrlString.h"
 
+
+#import "resultModel.h"
+
 @interface CORegServiceViewController () <UIWebViewDelegate>
 {
 NSMutableArray *_annotations;//存放标注的经纬度
@@ -26,21 +29,44 @@ NSMutableArray *_annotations;//存放标注的经纬度
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self.view setBackgroundColor:[UIColor whiteColor]];
     [self initMapView];
     [self initData];
    
+    [HMNoteCenter addObserver:self selector:@selector(getDataList:) name:GETNETWORKLIST object:nil];
 }
 
+-(void)addNote
+{
+
+}
+-(void)getDataList:(NSNotification *)note
+{
+    NSMutableArray * mutabelist= note.userInfo[@"commodityModel"];
+    for (resultModel * model in mutabelist) {
+        JFAnnotation *annotation = [[JFAnnotation alloc] init];
+        
+        annotation.jfModel = model;
+        annotation.title = model.ADDRESS;
+        annotation.subtitle = [NSString stringWithFormat:@"范围是%@",model.PRECISION];
+ 
+        annotation.coordinate = CLLocationCoordinate2DMake([ model.LAT doubleValue], [model.LNG doubleValue]);
+        [_annotations addObject:annotation];
+        }
+
+    [self performSelectorOnMainThread:@selector(updateUI)withObject:_annotations waitUntilDone:YES];
+
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-- (IBAction)closeAction:(id)sender
-{
-    [self.view removeFromSuperview];
-    [self removeFromParentViewController];
-}
+//- (IBAction)closeAction:(id)sender
+//{
+//    [self.view removeFromSuperview];
+//    [self removeFromParentViewController];
+//}
 
 
 -(void)viewWillAppear:(BOOL)animated
@@ -66,36 +92,36 @@ NSMutableArray *_annotations;//存放标注的经纬度
 #pragma mark - 初始化地图标注数据
 -(void)initData{
     _annotations = [NSMutableArray array];
-    NSString *urlStr =  [[GetUrlString sharedManager]urlWithMapData];
-    [NetWork sendGetByReplacingUrl:urlStr withParams:nil success:^(id responseBody) {
-        NSMutableArray *dataArray = [responseBody objectForKey:@"data"];
-        
-        NSLog(@"%@", dataArray);
-        
-        for (int i = 0; i < dataArray.count; i++) {
-            JFDataModel  *jfdatamodel = [JFDataModel objectWithKeyValues:dataArray[i]];
-            //创建annotation
-            
-            
-            JFAnnotation *annotation = [[JFAnnotation alloc] init];
-            
-            annotation.jfModel = jfdatamodel;
-            annotation.title = jfdatamodel.mname;
-            annotation.subtitle = [NSString stringWithFormat:@"%@元",jfdatamodel.price];
-            if (jfdatamodel.rdplocs.count>0) {
-                NSDictionary *dic = jfdatamodel.rdplocs[0];
-                NSNumber *lat = [dic objectForKey:@"lat"];
-                NSNumber *lng = [dic objectForKey:@"lng"];
-                annotation.coordinate = CLLocationCoordinate2DMake([lat doubleValue], [lng doubleValue]);
-            }
-            [_annotations addObject:annotation];
-            
-        }
-        [self performSelectorOnMainThread:@selector(updateUI)withObject:_annotations waitUntilDone:YES];
-        
-    } failure:^(NSError *error) {
-        
-    }];
+//    NSString *urlStr =  [[GetUrlString sharedManager]urlWithMapData];
+//    [NetWork sendGetByReplacingUrl:urlStr withParams:nil success:^(id responseBody) {
+//        NSMutableArray *dataArray = [responseBody objectForKey:@"data"];
+//        
+//        NSLog(@"%@", dataArray);
+//        
+//        for (int i = 0; i < dataArray.count; i++) {
+//            JFDataModel  *jfdatamodel = [JFDataModel objectWithKeyValues:dataArray[i]];
+//            //创建annotation
+//            
+//            
+//            JFAnnotation *annotation = [[JFAnnotation alloc] init];
+//            
+//            annotation.jfModel = jfdatamodel;
+//            annotation.title = jfdatamodel.mname;
+//            annotation.subtitle = [NSString stringWithFormat:@"%@元",jfdatamodel.price];
+//            if (jfdatamodel.rdplocs.count>0) {
+//                NSDictionary *dic = jfdatamodel.rdplocs[0];
+//                NSNumber *lat = [dic objectForKey:@"lat"];
+//                NSNumber *lng = [dic objectForKey:@"lng"];
+//                annotation.coordinate = CLLocationCoordinate2DMake([lat doubleValue], [lng doubleValue]);
+//            }
+//            [_annotations addObject:annotation];
+//            
+//        }
+//        [self performSelectorOnMainThread:@selector(updateUI)withObject:_annotations waitUntilDone:YES];
+//        
+//    } failure:^(NSError *error) {
+//        
+//    }];
 }
 
 -(void)updateUI{
@@ -106,8 +132,14 @@ NSMutableArray *_annotations;//存放标注的经纬度
 }
 #pragma mark - 初始化地图
 -(void)initMapView{
-    self.mapView = [[BMKMapView alloc]initWithFrame:CGRectMake(0, 40, self.view.frame.size.width, self.view.frame.size.height-40)];
+    self.mapView = [[BMKMapView alloc]init];
+    self.mapgbView.hidden=YES;
+    self.mapView.frame=self.view.bounds;
     [self.view addSubview:self.mapView];
+//    self.mapView.frame=self.mapgbView.bounds;
+    [self.mapgbView addSubview:self.mapView];
+    [self.view addSubview:self.mapView];
+    self.mapView.zoomLevel=8;
     
     _locService = [[BMKLocationService alloc]init];
     _geocodesearch = [[BMKGeoCodeSearch alloc]init];
@@ -117,7 +149,7 @@ NSMutableArray *_annotations;//存放标注的经纬度
     setCenter = YES;
     
     //定位
-    // [self showCurrentLocation];
+     [self showCurrentLocation];
     
 }
 #pragma mark - 初始化返回按钮
@@ -141,7 +173,7 @@ NSMutableArray *_annotations;//存放标注的经纬度
 -(void)showCurrentLocation
 {
     [_locService startUserLocationService];
-    _mapView.showsUserLocation = NO;//先关闭显示的定位图层
+    _mapView.showsUserLocation = YES;//先关闭显示的定位图层
     _mapView.userTrackingMode = BMKUserTrackingModeNone;
     _mapView.showsUserLocation = YES;//显示定位图层
 }

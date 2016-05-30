@@ -22,7 +22,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vla-wC-hvo" userLabel="注册">
-                                <rect key="frame" x="262" y="184" width="500" height="400"/>
+                                <rect key="frame" x="262" y="84" width="500" height="400"/>
                                 <subviews>
                                     <view alpha="0.80000001192092896" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G0O-Mg-H3O" userLabel="BgView">
                                         <rect key="frame" x="0.0" y="0.0" width="500" height="400"/>
@@ -103,7 +103,7 @@
                                             <constraint firstAttribute="trailing" secondItem="80Y-Kb-W1j" secondAttribute="trailing" id="wjZ-zr-zP3"/>
                                         </constraints>
                                     </view>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ddz-7l-Fkt">
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ddz-7l-Fkt">
                                         <rect key="frame" x="96" y="275" width="308" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="7oj-SC-MUc"/>
@@ -206,7 +206,7 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DU0-oD-9Kt" userLabel="登录">
-                                <rect key="frame" x="262" y="184" width="500" height="400"/>
+                                <rect key="frame" x="262" y="84" width="500" height="400"/>
                                 <subviews>
                                     <view alpha="0.79999999999999982" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ass-br-jhb" userLabel="BgView">
                                         <rect key="frame" x="0.0" y="0.0" width="500" height="400"/>
@@ -368,10 +368,10 @@
                             <constraint firstItem="lTy-an-0Le" firstAttribute="top" secondItem="fui-7Q-r0B" secondAttribute="bottom" id="BBF-QY-9Q8"/>
                             <constraint firstAttribute="trailingMargin" secondItem="fui-7Q-r0B" secondAttribute="trailing" constant="-20" id="HSB-4V-Ppu"/>
                             <constraint firstItem="fui-7Q-r0B" firstAttribute="top" secondItem="HpF-R4-WE5" secondAttribute="topMargin" id="TNs-c6-mIr"/>
-                            <constraint firstItem="vla-wC-hvo" firstAttribute="top" secondItem="inv-cc-raF" secondAttribute="bottom" constant="164" id="d0p-NB-nqn"/>
+                            <constraint firstItem="vla-wC-hvo" firstAttribute="top" secondItem="inv-cc-raF" secondAttribute="bottom" constant="64" id="d0p-NB-nqn"/>
                             <constraint firstItem="fui-7Q-r0B" firstAttribute="leading" secondItem="HpF-R4-WE5" secondAttribute="leadingMargin" constant="-20" id="gRo-6m-7Ig"/>
                             <constraint firstItem="vla-wC-hvo" firstAttribute="centerX" secondItem="fui-7Q-r0B" secondAttribute="centerX" id="iTC-k9-8gs"/>
-                            <constraint firstItem="DU0-oD-9Kt" firstAttribute="top" secondItem="inv-cc-raF" secondAttribute="bottom" constant="164" id="kzn-54-2W2"/>
+                            <constraint firstItem="DU0-oD-9Kt" firstAttribute="top" secondItem="inv-cc-raF" secondAttribute="bottom" constant="64" id="kzn-54-2W2"/>
                             <constraint firstItem="DU0-oD-9Kt" firstAttribute="centerX" secondItem="vla-wC-hvo" secondAttribute="centerX" id="q5M-kt-Z3E"/>
                         </constraints>
                     </view>
@@ -400,66 +400,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UeF-ad-15E" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="722" y="853"/>
-        </scene>
-        <!--ResultVC-->
-        <scene sceneID="nfN-wK-ZRJ">
-            <objects>
-                <viewController storyboardIdentifier="ResultVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="zLx-8Q-OSz" customClass="ResultVC" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="9kr-C9-5bm"/>
-                        <viewControllerLayoutGuide type="bottom" id="dLU-m4-LjF"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="mlK-B6-OyQ">
-                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Mz5-R6-mXe" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1077" y="1807"/>
-        </scene>
-        <!--Reg Service View Controller-->
-        <scene sceneID="p7i-pb-riG">
-            <objects>
-                <viewController storyboardIdentifier="CORegServiceViewController" id="2dE-OV-rIq" customClass="CORegServiceViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Qc1-Oo-Sis"/>
-                        <viewControllerLayoutGuide type="bottom" id="x2c-09-NVJ"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="jUY-gE-Atk">
-                        <rect key="frame" x="0.0" y="0.0" width="700" height="650"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RpR-mA-wsJ">
-                                <rect key="frame" x="13" y="13" width="46" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="2Cq-BN-pdl"/>
-                                    <constraint firstAttribute="width" constant="46" id="feQ-C7-g9G"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <state key="normal" title="关闭">
-                                    <color key="titleColor" red="0.035294117649999998" green="0.70196078429999997" blue="0.58039215690000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="closeAction:" destination="2dE-OV-rIq" eventType="touchUpInside" id="EZC-qe-sBS"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="RpR-mA-wsJ" firstAttribute="leading" secondItem="jUY-gE-Atk" secondAttribute="leadingMargin" constant="-7" id="YQA-Mq-S1C"/>
-                            <constraint firstItem="RpR-mA-wsJ" firstAttribute="top" secondItem="Qc1-Oo-Sis" secondAttribute="bottom" constant="13" id="oex-CK-dLq"/>
-                        </constraints>
-                    </view>
-                    <nil key="simulatedStatusBarMetrics"/>
-                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="700" height="650"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="nfa-pj-pdf" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1674" y="794"/>
         </scene>
     </scenes>
     <resources>

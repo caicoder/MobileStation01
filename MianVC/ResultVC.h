@@ -9,5 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface ResultVC : UIViewController
-
+@property (nonatomic,strong)NSMutableArray * resultList;
+@property (weak, nonatomic) IBOutlet UITableView *tav;
+@property (weak, nonatomic) IBOutlet UIButton *showBtn;
+- (IBAction)showBtnClick:(UIButton *)sender;
+@property (nonatomic,assign)int type;
 @end

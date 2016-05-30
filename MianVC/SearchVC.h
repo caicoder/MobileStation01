@@ -9,5 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface SearchVC : UIViewController
+@property (weak, nonatomic) IBOutlet UIView *topView;
+@property (weak, nonatomic) IBOutlet UITableView *taV;
+@property (weak, nonatomic) IBOutlet UIButton *searchBtn;
+- (IBAction)searchBtnClick:(UIButton *)sender;
 
 @end

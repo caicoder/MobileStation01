@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "resultModel.h"
 
 @interface resultCell : UITableViewCell
-
+@property (nonatomic,strong)resultModel  * resultModel;
 @end

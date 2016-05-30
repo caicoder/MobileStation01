@@ -7,10 +7,10 @@
 //
 
 #import "BMKPointAnnotation.h"
-@class JFDataModel;
+@class resultModel;
 @interface JFAnnotation : BMKPointAnnotation
 
-@property (nonatomic, strong) JFDataModel *jfModel;
+@property (nonatomic, strong) resultModel *jfModel;
 
 
 

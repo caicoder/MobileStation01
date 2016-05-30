@@ -15,4 +15,7 @@
     BMKPointAnnotation *pointAnnotation;
     BOOL setCenter;
     
-}@end
+}
+@property (strong, nonatomic) IBOutlet UIView *mapgbView;
+
+@end

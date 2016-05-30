@@ -41,7 +41,7 @@
             
             self.calloutView.center = CGPointMake(CGRectGetWidth(self.bounds) / 2.f + self.calloutOffset.x,-CGRectGetHeight(self.calloutView.bounds) / 2.f + self.calloutOffset.y);
         }
-        NSString *imgUrl = [self.jfannotation.jfModel.imgurl stringByReplacingOccurrencesOfString:@"w.h" withString:@"104.63"];
+//        NSString *imgUrl = [self.jfannotation.jfModel.imgurl stringByReplacingOccurrencesOfString:@"w.h" withString:@"104.63"];
 //        [self.calloutView.imageView sd_setImageWithURL:[NSURL URLWithString:imgUrl] placeholderImage:[UIImage imageNamed:@"bg_customReview_image_default"]];
         [self.calloutView.imageView setImage:[UIImage imageNamed:@"chinaMobile.png"]];
         self.calloutView.title = self.annotation.title;
